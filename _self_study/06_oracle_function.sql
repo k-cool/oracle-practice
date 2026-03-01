@@ -1,0 +1,109 @@
+/*
+    단일행 함수
+    다중행 함수
+*/
+
+-- UPPER, LOWER, INITCAP
+SELECT ENAME, UPPER(ENAME), LOWER(ENAME), INITCAP(ENAME)
+FROM EMP;
+
+-- LENGTH, LENGTHB 한글은 3바이트임에 유의
+SELECT ENAME, LENGTH(ENAME), LENGTHB(ENAME)
+FROM EMP;
+
+-- SUBSTR(data, start, end)
+SELECT JOB, SUBSTR(JOB, 1, 2)
+FROM EMP;
+
+-- INSTR(대상문자열, 찾는 문자, 검색시작 위치, 찾으려는 순번) -> 문자열 위치 찾기
+SELECT INSTR('HELLO, ORACLE!', 'L', 2, 2)
+FROM DUAL;
+
+-- REPLACE(대상문자열, 찾는문자, 대체문자)
+SELECT REPLACE('010-1234-1234', '-', ' ')
+FROM DUAL;
+
+-- LPAD(대상문자열, 데이터 자릿수, 채울문자), RPAD(대상문자열, 데이터 자릿수, 채울문자
+SELECT LPAD('Oracle', 10, '*') AS LPAD_EX, RPAD('Oracle', 10, '$') AS RPAD_EX
+FROM DUAL;
+
+-- CONCAT(A,B) 문자열 두개 붙이기
+SELECT CONCAT(EMPNO, ENAME)
+FROM EMP;
+
+SELECT EMPNO || ':' || ENAME AS EX
+FROM EMP;
+
+-- TRIM, LTRIM(대상 문자열, 삭제할 문자집합), RTRIM(대상 문자열, 삭제할 문자집합)
+SELECT LTRIM('<!TEST@>', '<!') AS LTRIM_EX, RTRIM('<!TEST@>', '@>') AS RTRIM_EX
+FROM DUAL;
+
+-- ROUND, TRUNC, CEIL, FLOOR, MOD
+
+/*
+    - 날짜 +- 숫자 -> 해당 날짜보다 숫자 일수 이후/이전의 날짜
+    - 날짜 - 날짜 -> 두 날짜의 일수차이
+    - 날짜 + 날짜 -> 지원X
+*/
+SELECT SYSDATE AS NOW, SYSDATE - 1 AS YESTERDAY, SYSDATE + 1 AS TOMORROW
+FROM DUAL;
+
+-- ADD_MONTH(기준날짜, 더할 개월수)
+SELECT EMPNO, ENAME, HIREDATE, ADD_MONTHS(HIREDATE, 120) AS WORK10YEAR
+FROM EMP;
+
+-- MONTH_BETWEEN(날짜1, 날짜2)
+SELECT EMPNO, ENAME, HIREDATE, SYSDATE, TRUNC(MONTHS_BETWEEN(SYSDATE, HIREDATE) / 12, 1) AS WORKING_YEARS
+FROM EMP;
+
+-- NEXT_DAY(날짜, 요일문자), LAST_DAY(날짜)
+SELECT SYSDATE, NEXT_DAY(SYSDATE, '월요일'), LAST_DAY(SYSDATE)
+FROM DUAL;
+
+-- TO_CHAR(날짜, 형식 문자열)
+SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS')
+FROM DUAL;
+
+-- TO_CHAR(날짜, 형식 문자열, 'NLS_DATE_LANGUAGE = 언어')
+SELECT TO_CHAR(SYSDATE, 'MON DAY', 'NLS_DATE_LANGUAGE = KOREAN')   AS KOREAN,
+       TO_CHAR(SYSDATE, 'MON DAY', 'NLS_DATE_LANGUAGE = JAPANESE') AS JAPANESE,
+       TO_CHAR(SYSDATE, 'MON DAY', 'NLS_DATE_LANGUAGE = ENGLISH')  AS ENGLISH
+FROM DUAL;
+
+-- TO_CHAR(숫자, 형식 문자열)
+SELECT TO_CHAR(SAL, '$999,999')    AS SAL_1,
+       TO_CHAR(SAL, 'L999,999')    AS SAL_2,
+       TO_CHAR(SAL, '$999,999.00') AS SAL_3
+FROM EMP;
+
+-- TO_NUMBER(문자열, 형식 문자열)
+SELECT TO_NUMBER('1,500', '999,999') - TO_NUMBER('1,000', '999,999')
+FROM DUAL;
+
+-- TO_DATE(문자열, 형식 문자열)
+SELECT TO_DATE('17-12-1980', 'dd-mm-yyyy')
+FROM DUAL;
+
+-- NVL(데이터, 데이터가 NULL일 경우 반환할 데이터)
+SELECT EMPNO, ENAME, SAL, NVL(COMM, 0), SAL + NVL(COMM, 0)
+FROM EMP;
+
+-- NVL2(데이터, 데이터가 NULL이 아닐경우 반환할 데이터, 데이터가 NULL일 경우 반환할 데이터)
+SELECT EMPNO, ENAME, NVL2(COMM, 'O', 'X') AS HAS_COMM
+FROM EMP;
+
+-- DECODE(분기대상, 조건1, 결과1, 조건2, 결과2 ..., 디폴트 결과)
+SELECT EMPNO, ENAME, DECODE(JOB, 'MANAGER', SAL * 1.1, 'SALESMAN', SAL * 1.05, 'ANALYST', SAL, SAL * 1.03) AS UP_SAL
+FROM EMP;
+
+-- CASE 분기대상 WHEN 조건1 THEN 결과1 WHEN 조건2 THEN 결과2 ..., ELSE 디폴트 결과 END
+SELECT EMPNO,
+       ENAME,
+       CASE JOB
+           WHEN 'MANAGER' THEN SAL * 1.1
+           WHEN 'SALESMAN' THEN SAL * 1.05
+           WHEN 'ANALYST' THEN SAL
+           ELSE SAL * 1.03
+           END AS UP_SAL
+FROM EMP;
+
