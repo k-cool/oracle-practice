@@ -1,0 +1,60 @@
+/*
+    다중행 함수
+    - 결과가 여러행일수 있는 연산자와 함께 사용 불가
+    - SUM, COUNT, MAX, MIN, AVG
+*/
+
+-- SUM
+SELECT SUM(SAL)
+FROM EMP;
+
+SELECT SUM(DISTINCT SAL), SUM(ALL SAL), SUM(SAL)
+FROM EMP;
+
+--COUNT
+SELECT COUNT(*)
+FROM EMP
+WHERE DEPTNO = 30;
+
+-- NULL은 카운트하지 않음
+SELECT COUNT(COMM)
+FROM EMP;
+
+-- MAX, MIN
+SELECT MAX(HIREDATE)
+FROM EMP
+WHERE DEPTNO = 20;
+
+/*
+    GROUP BY 그룹화할 열 또는 데이터
+    - GROUP BY에 지정하지 않은 열은 SELECT 문에서 사용불가
+    - 여러 열을 그룹핑 가능
+*/
+SELECT TRUNC(AVG(SAL), 2) AS AVG_SAL, DEPTNO
+FROM EMP
+GROUP BY DEPTNO;
+
+SELECT DEPTNO, JOB, AVG(SAL)
+FROM EMP
+GROUP BY DEPTNO, JOB
+ORDER BY DEPTNO, JOB;
+
+/*
+    HAVING
+    - 만든 그룹을 조건별로 출력할때 사용
+    - 결과물에 조건 필터를 한번 걸어줌
+*/
+
+SELECT DEPTNO, JOB, AVG(SAL)
+FROM EMP
+GROUP BY DEPTNO, JOB
+HAVING AVG(SAL) >= 2000
+ORDER BY DEPTNO, JOB;
+
+SELECT DEPTNO, JOB, AVG(SAL)
+FROM EMP
+WHERE SAL <= 3000 -- 그룹핑 하기 이전에 제한
+GROUP BY DEPTNO, JOB
+HAVING AVG(SAL) >= 2000 -- 그룹핑 한 이후에 제한
+ORDER BY DEPTNO, JOB;
+
