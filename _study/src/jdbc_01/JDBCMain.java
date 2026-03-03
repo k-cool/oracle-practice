@@ -1,13 +1,21 @@
 package jdbc_01;
 
+import utils.EnvLoader;
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 public class JDBCMain {
-    public static void main(String[] args) {
+    static Map<String, String> envMap;
+
+    public static void main(String[] args) throws IOException {
+        envMap = EnvLoader.loadEnv(".env");
+
         /*
          * DB => 껍데기 3종
          * - interface -> connection, statement, resultSet
@@ -18,13 +26,14 @@ public class JDBCMain {
         String sql = "SELECT * FROM snack";
 
         try {
-            Connection con = DriverManager.getConnection(url, "c##sw1004", "sw1004");
+            Connection con = DriverManager.getConnection(url, envMap.get("DB_USER"), envMap.get("DB_PASSWORD"));
+
 
             Statement st = con.createStatement();
 
             ResultSet rs = st.executeQuery(sql);
 
-            while(rs.next()) {
+            while (rs.next()) {
                 int no = rs.getInt("s_no");
                 String name = rs.getString("s_name");
                 int price = rs.getInt("s_price");

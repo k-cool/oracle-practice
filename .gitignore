@@ -178,3 +178,4 @@ $RECYCLE.BIN/
 
 # intellij
 .idea/*
+.env

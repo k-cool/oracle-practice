@@ -2,39 +2,42 @@ package jdbc_02;
 
 import utils.EnvLoader;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
-public class DBMain {
+public class PSMain {
     static Map<String, String> envMap;
 
     public static void main(String[] args) throws IOException {
         envMap = EnvLoader.loadEnv(".env");
 
-
-        // db -> 3종세트
-        /*
-         * db_test
-         *
-         * select (R) - rs
-         * insert (C), update(U), delete(D) -> rs 필요없음
-         */
-
         String url = "jdbc:oracle:thin:@192.168.0.57:1521:XE";
-        String sql = "INSERT INTO db_test VALUES (db_test_seq.nextval, 'test2', 30)";
+        String sql = "INSERT INTO db_test VALUES (db_test_seq.nextval, ?, ?)";
         Connection con = null;
-        Statement st = null;
+        PreparedStatement pst = null; // SQL Injection 방어하기 위해서도 사용
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("이름: ");
+        String name = sc.nextLine();
+        System.out.println("나이: ");
+        int age = sc.nextInt();
+
 
         try {
             con = DriverManager.getConnection(url, envMap.get("DB_USER"), envMap.get("DB_PASSWORD"));
 
-            st = con.createStatement();
+            pst = con.prepareStatement(sql);
 
-            int row = st.executeUpdate(sql);
+            pst.setString(1, name);
+            pst.setInt(2, age);
+
+            int row = pst.executeUpdate();
 
             if (row == 1) {
                 System.out.println("SUCCESS");
@@ -47,8 +50,10 @@ public class DBMain {
 
             try {
                 // 사용 역순으로 닫아주기
-                st.close();
+                pst.close();
                 con.close();
+
+                System.out.println("Closing connection");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
