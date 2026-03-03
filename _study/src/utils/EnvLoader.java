@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class EnvLoader {
     public static Map<String, String> loadEnv(String filePath) throws IOException {
-        Map<String, String> envMap = new HashMap<>();
+        final Map<String, String> envMap = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
