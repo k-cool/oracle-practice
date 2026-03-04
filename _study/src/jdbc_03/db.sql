@@ -30,3 +30,42 @@ FROM student_db;
 
 DELETE student_db
 WHERE s_no = 10;
+
+CREATE SEQUENCE coffee_test_seq;
+
+CREATE TABLE coffee_test
+(
+    c_no     number(2) PRIMARY KEY,
+    c_name   varchar2(30 char) NOT NULL,
+    c_price  number(5)         NOT NULL,
+    c_origin varchar2(20 char) NOT NULL
+);
+
+INSERT INTO coffee_test
+VALUES (coffee_test_seq.nextval, 'americano', 2000, '에티오피아');
+INSERT INTO coffee_test
+VALUES (coffee_test_seq.nextval, 'cafelatte', 2500, '케냐');
+
+SELECT *
+FROM coffee_test;
+
+DROP TABLE bmi;
+
+CREATE TABLE bmi
+(
+    b_no     number(2) PRIMARY KEY,
+    b_name   varchar2(10 char) NOT NULL,
+    b_height number(4, 1)      NOT NULL,
+    b_weight number(3, 1)      NOT NULL,
+    b_bmi    number(3, 1)      NOT NULL,
+    b_status VARCHAR2(20)      NOT NULL,
+    CONSTRAINT chk_status
+        CHECK (b_status IN ('LOW', 'NORMAL', 'HIGH'))
+);
+
+CREATE SEQUENCE bmi_seq;
+
+INSERT INTO bmi
+VALUES (bmi_seq.nextval, 'sw', 176.5, 70.5, 23.7, 'NORMAL');
+INSERT INTO bmi
+VALUES (bmi_seq.nextval, 'sw', 176.5, 70.5, 23.7, 'NORMAL2');
