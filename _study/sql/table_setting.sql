@@ -16,3 +16,5 @@ VALUES (db_test_seq.nextval, 'test2', 30);
 SELECT *
 FROM db_test;
 
+
+

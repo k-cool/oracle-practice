@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EnvLoader {
-    public static Map<String, String> loadEnv(String filePath) throws IOException {
+    public static Map<String, String> loadEnv(String filePath) {
         final Map<String, String> envMap = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -34,6 +34,8 @@ public class EnvLoader {
 
                 envMap.put(key, value);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return envMap;
